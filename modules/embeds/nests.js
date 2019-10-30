@@ -5,7 +5,7 @@ module.exports.run = async (MAIN, message, nest, server, embed_area, timezone, e
 
   let form = MAIN.masterfile.pokemon[nest.pokemon_id].default_form ? MAIN.masterfile.pokemon[nest.pokemon_id].default_form : 0;
   let locale = await MAIN.Get_Locale(MAIN, nest, server);
-  let typing = await MAIN.Get_Typing(MAIN, nest,  server);
+  let typing = await MAIN.Get_Typing(MAIN, nest);
 
   // CHECK IF THE TARGET IS A USER
   let member = MAIN.guilds.get(server.id).members.get(message.author.id);

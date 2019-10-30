@@ -8,7 +8,7 @@ module.exports.run = async (MAIN, target, raid, raid_type, main_area, sub_area, 
   let member = MAIN.guilds.get(server.id).members.get(target.user_id);
 
   // VARIABLES
-  let typing = await MAIN.Get_Typing(MAIN, raid, server);
+  let typing = await MAIN.Get_Typing(MAIN, raid);
   let gym = {
     id: raid.gym_id,
     level: raid.level,

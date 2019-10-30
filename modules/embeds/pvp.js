@@ -11,7 +11,7 @@ module.exports.run = async (MAIN, target, sighting, internal_value, time_now, ma
   let member = MAIN.guilds.get(server.id).members.get(target.user_id);
 
   // VARIABLES
-  let typing = await MAIN.Get_Typing(MAIN, sighting, server);
+  let typing = await MAIN.Get_Typing(MAIN, sighting);
   let pokemon = {
     encounter_id: sighting.encounter_id,
     // POKEMON NAME AND FORM

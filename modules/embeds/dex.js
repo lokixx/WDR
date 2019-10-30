@@ -7,7 +7,7 @@ module.exports.run = async (MAIN, message, pokemon, server) => {
 
       // DETERMINE POKEMON NAME
       let locale = await MAIN.Get_Locale(MAIN, pokemon, server);
-      let typing = await MAIN.Get_Typing(MAIN, pokemon, server);
+      let typing = await MAIN.Get_Typing(MAIN, pokemon);
 
       let pokemon_name = locale.pokemon_name, pokemon_id = pokemon.pokemon_id, form_id = pokemon.form;
       let evolutions = pokemon_name;

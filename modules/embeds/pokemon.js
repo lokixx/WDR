@@ -7,7 +7,7 @@ module.exports.run = async (MAIN, has_iv, target, sighting, internal_value, time
   let member = MAIN.guilds.get(server.id).members.get(target.user_id);
 
   // VARIABLES POKEMON NAME, FORM AND TYPE EMOTES
-  let typing = await MAIN.Get_Typing(MAIN, sighting, server);
+  let typing = await MAIN.Get_Typing(MAIN, sighting);
   let pokemon = {
     name: sighting.locale.pokemon_name,
     form: sighting.locale.form,
