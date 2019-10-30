@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+
 const pvp = require('../base/pvp.js');
 
 module.exports.run = async (MAIN, message, pokemon, server) => {
@@ -81,9 +81,9 @@ module.exports.run = async (MAIN, message, pokemon, server) => {
       }
 
       // GET SPRITE IMAGE
-      let sprite = await MAIN.Get_Sprite(MAIN, pokemon);
+      let sprite = MAIN.Get_Sprite(MAIN, pokemon);
 
-      let dex_embed = new Discord.RichEmbed()
+      let dex_embed = new MAIN.Discord.RichEmbed()
       .setColor(pokemon_color)
       .setThumbnail(sprite)
       .setTitle('**'+pokemon_name+'** '+form_name+'(#'+pokemon_id+') '+pokemon_type)

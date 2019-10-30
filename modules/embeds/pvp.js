@@ -1,11 +1,9 @@
-const Discord = require('discord.js');
 
-module.exports.run = async (MAIN, target, sighting, internal_value, time_now, main_area, sub_area, embed_area, server, timezone, role_id, embed, possible_cps) => {
+
+module.exports.run = async (MAIN, target, sighting, internal_value, time_now, area, server, timezone, role_id, embed, possible_cps) => {
   // RETURN IF NO CP PROVIDED
   if(sighting.cp == null){ return; }
-
-  let Embed_Config = require('../../embeds/'+embed.embed);
-  let pokemon_embed = {};
+  let Embed_Config = require('../../embeds/'+embed);
 
   // CHECK IF THE TARGET IS A USER
   let member = MAIN.guilds.get(server.id).members.get(target.user_id);
@@ -19,7 +17,7 @@ module.exports.run = async (MAIN, target, sighting, internal_value, time_now, ma
     form: sighting.locale.form,
 
     // GET SPRITE IMAGE
-    sprite: await MAIN.Get_Sprite(MAIN, sighting),
+    sprite: MAIN.Get_Sprite(MAIN, sighting),
 
     // IV INFO
     iv: Math.round(internal_value),
@@ -53,7 +51,7 @@ module.exports.run = async (MAIN, target, sighting, internal_value, time_now, ma
     // GET LOCATION INFO
     lat: sighting.latitude,
     lon: sighting.longitude,
-    area: embed_area,
+    area: area.embed,
     map_url: MAIN.config.FRONTEND_URL,
 
     // MAP LINK PROVIDERS
@@ -72,7 +70,7 @@ module.exports.run = async (MAIN, target, sighting, internal_value, time_now, ma
   pokemon.verified = sighting.disappear_time_verified ? MAIN.emotes.checkYes : MAIN.emotes.yellowQuestion;
 
   // DETERMINE DESPAWN TIME
-  pokemon.time = await MAIN.Bot_Time(sighting.disappear_time, '1', timezone);
+  pokemon.time = MAIN.Bot_Time(sighting.disappear_time, '1', timezone);
   pokemon.mins = Math.floor((sighting.disappear_time-(time_now/1000))/60);
   pokemon.secs = Math.floor((sighting.disappear_time-(time_now/1000)) - (pokemon.mins*60));
 
@@ -106,7 +104,7 @@ module.exports.run = async (MAIN, target, sighting, internal_value, time_now, ma
   } if(!pokemon.ranks){ console.error('Problem with Ranks '+possible_cps);}
 
   // CREATE AND SEND EMBED
-  pokemon_embed = Embed_Config(pokemon);
+  let pokemon_embed = Embed_Config(pokemon);
   if(member){
     if (MAIN.config.TIME_REMAIN_SUBS && pokemon.mins < MAIN.config.TIME_REMAIN_SUBS) { return; }
     if(MAIN.debug.PVP == 'ENABLED' && MAIN.debug.Subscriptions == 'ENABLED'){ console.info('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] [EMBEDS] [pvp.js] Sent a '+pokemon.name+' to '+member.user.tag+' ('+member.id+').'); }

@@ -1,5 +1,5 @@
 const GeoTz = require('geo-tz');
-const Discord = require('discord.js');
+
 const Send_Dex = require('../embeds/dex.js');
 
 module.exports.run = async (MAIN, message, prefix, discord) => {
@@ -13,7 +13,7 @@ module.exports.run = async (MAIN, message, prefix, discord) => {
     nickname = message.author.username;
   }
 
-  let requestAction = new Discord.RichEmbed()
+  let requestAction = new MAIN.Discord.RichEmbed()
   .setAuthor(nickname, message.author.displayAvatarURL)
   .setTitle('What Pokémon do you want to find out more about?')
   .setFooter('Type the name of desired Pokémon, no command prefix required.');

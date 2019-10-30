@@ -1,8 +1,9 @@
-const Discord = require('discord.js');
+
 const pvp = require('../base/pvp.js');
 
-module.exports.run = async (MAIN, target, raid, raid_type, main_area, sub_area, embed_area, server, timezone, content, embed) => {
-  let Embed_Config = require('../../embeds/'+embed.embed), raid_embed = {};
+module.exports.run = async (MAIN, target, raid, raid_type, area, server, timezone, content, embed) => {
+  let Embed_Config = require('../../embeds/'+embed);
+  let raid_embed = '';
 
   // CHECK IF THE TARGET IS A USER
   let member = MAIN.guilds.get(server.id).members.get(target.user_id);
@@ -36,7 +37,7 @@ module.exports.run = async (MAIN, target, raid, raid_type, main_area, sub_area, 
     // GET LOCATION INFO
     lat: raid.latitude, lon: raid.longitude,
     map_img: '',
-    area: embed_area,
+    area: area.embed,
     map_url: MAIN.config.FRONTEND_URL,
 
     // MAP LINK PROVIDERS
@@ -126,7 +127,7 @@ module.exports.run = async (MAIN, target, raid, raid_type, main_area, sub_area, 
       gym.maxCP_boosted = pvp.CalculateCP(MAIN,raid.pokemon_id,raid.form,15,15,15,25);
 
       // GET THE RAID BOSS SPRITE
-      gym.sprite = await MAIN.Get_Sprite(MAIN, raid);
+      gym.sprite = MAIN.Get_Sprite(MAIN, raid);
 
       // CREATE THE RAID EMBED
       raid_embed = await Embed_Config(gym)

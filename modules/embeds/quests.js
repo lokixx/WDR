@@ -1,8 +1,8 @@
-const Discord = require('discord.js');
+
 const moment = require('moment');
 
-module.exports.run = async (MAIN, target, quest, quest_reward, simple_reward, main_area, sub_area, embed_area, server, timezone, role_id, embed) => {
-  let Embed_Config = require('../../embeds/'+embed), quest_embed = {};
+module.exports.run = async (MAIN, target, quest, quest_reward, simple_reward, area, server, timezone, role_id, embed) => {
+  let Embed_Config = require('../../embeds/'+embed);
 
   // CHECK IF THE TARGET IS A USER
   let member = MAIN.guilds.get(server.id).members.get(target.user_id);
@@ -16,7 +16,7 @@ module.exports.run = async (MAIN, target, quest, quest_reward, simple_reward, ma
     // GET LOCATION INFO
     lat: quest.latitude,
     lon: quest.longitude,
-    area: embed_area,
+    area: area.embed,
     url: quest.url ? quest.url : 'https://raw.githubusercontent.com/shindekokoro/PogoAssets/master/static_assets/png/Badge_Quests_SILVER_01.png',
     map_url: MAIN.config.FRONTEND_URL,
 
@@ -36,8 +36,8 @@ module.exports.run = async (MAIN, target, quest, quest_reward, simple_reward, ma
 
   // GET REWARD ICON
   if(quest_reward.indexOf('Encounter') >= 0){
-    pokestop.sprite = await MAIN.Get_Sprite(MAIN, quest.rewards[0].info);
-  } else{ pokestop.sprite = await MAIN.Get_Sprite(MAIN, quest_reward, true); }
+    pokestop.sprite = MAIN.Get_Sprite(MAIN, quest.rewards[0].info);
+  } else{ pokestop.sprite = MAIN.Get_Sprite(MAIN, quest_reward, true); }
 
   // GET EMBED COLOR BASED ON QUEST DIFFICULTY
   switch(true){
@@ -49,7 +49,7 @@ module.exports.run = async (MAIN, target, quest, quest_reward, simple_reward, ma
 
   // CREATE QUEST EMBED
   if(!pokestop.sprite){ pokestop.sprite = quest.url; }
-  quest_embed = Embed_Config(pokestop);
+  let quest_embed = Embed_Config(pokestop);
 
   // IF MEMBER SEND INSERT INTO DB
   if(member){
@@ -63,7 +63,7 @@ module.exports.run = async (MAIN, target, quest, quest_reward, simple_reward, ma
 
     // SAVE THE ALERT TO THE ALERT TABLE FOR FUTURE DELIVERY
     return MAIN.pdb.query(`INSERT INTO quest_alerts (user_id, user_name, quest, embed, area, bot, alert_time, discord_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [target.user_id, target.user_name, quest_object, quest_embed, embed_area, target.bot, db_date, server.id], function (error, alert, fields) {
+    [target.user_id, target.user_name, quest_object, quest_embed, area.embed, target.bot, db_date, server.id], function (error, alert, fields) {
       if(error){ console.error('['+MAIN.config.BOT_NAME+'] UNABLE TO ADD ALERT TO quest_alerts',error); }
       else if(MAIN.debug.Quests == 'ENABLED' && MAIN.debug.Subscriptions == 'ENABLED'){
         console.info(MAIN.Color.pink+'[EMBEDS] ['+MAIN.Bot_Time(null,'stamp')+'] [quests.js] [SUBSCRIPTIONS] Stored a '+quest_reward+' Quest Alert for '+target.user_name+'.'+MAIN.Color.reset);

@@ -1,8 +1,7 @@
-delete require.cache[require.resolve('../embeds/invasion.js')];
 const Send_Invasion = require('../embeds/invasion.js');
-const Discord = require('discord.js');
 
-module.exports.run = async (MAIN, invasion, main_area, sub_area, embed_area, server, timezone, role_id) => {
+
+module.exports.run = async (MAIN, invasion, area, server, timezone, role_id) => {
 
   if(MAIN.debug.Invasion == 'ENABLED' && MAIN.debug.Feed == 'ENABLED'){ console.info('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] Received a Pokestop Invasion.'); }
 
@@ -21,7 +20,8 @@ module.exports.run = async (MAIN, invasion, main_area, sub_area, embed_area, ser
     let geofences = invasion_channel[1].geofences.split(',');
     let channel = MAIN.channels.get(invasion_channel[0]);
     let filter = MAIN.Filters.get(invasion_channel[1].filter);
-    let role_id = '', embed = 'invasion.js';
+    let role_id = '';
+    let embed = 'invasion.js';
 
     if (invasion_channel[1].roleid) {
       if (invasion_channel[1].roleid == 'here' || invasion_channel[1].roleid == 'everyone'){
@@ -43,10 +43,10 @@ module.exports.run = async (MAIN, invasion, main_area, sub_area, embed_area, ser
     else if (filter[type] == 'All' || filter[type] == gender) {
 
       // AREA FILTER
-      if(geofences.indexOf(server.name) >= 0 || geofences.indexOf(main_area) >= 0 || geofences.indexOf(sub_area) >= 0){
+      if(geofences.indexOf(server.name) >= 0 || geofences.indexOf(area.main) >= 0 || geofences.indexOf(area.sub) >= 0){
         if(MAIN.debug.Invasion == 'ENABLED' && MAIN.debug.Feed == 'ENABLED'){ console.info('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] Lure Passed Filters for '+invasion_channel[0]+'.'); }
-        Send_Invasion.run(MAIN, channel, invasion, type, main_area, sub_area, embed_area, server, timezone, role_id, embed);
-      } else{ if(MAIN.debug.Invasion == 'ENABLED' && MAIN.debug.Feed == 'ENABLED'){ console.info('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] Lure Did Not Pass Channel Geofences for '+invasion_channel[0]+'. Expected: '+invasion_channel[1].geofences+' Saw: '+server.name+'|'+main_area+'|'+sub_area); } }
+        Send_Invasion.run(MAIN, channel, invasion, type, area, server, timezone, role_id, embed);
+      } else{ if(MAIN.debug.Invasion == 'ENABLED' && MAIN.debug.Feed == 'ENABLED'){ console.info('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] Lure Did Not Pass Channel Geofences for '+invasion_channel[0]+'. Expected: '+invasion_channel[1].geofences+' Saw: '+server.name+'|'+area.main+'|'+area.sub); } }
     } else{ if(MAIN.debug.Invasion == 'ENABLED' && MAIN.debug.Feed == 'ENABLED'){ console.info('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] Lure Did Not Meet Type or Gender Filter for '+invasion_channel[0]+'. Expected: '+type+' '+filter[type]+', Saw: '+gender); } }
   });
 

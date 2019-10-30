@@ -1,5 +1,5 @@
 module.exports = async (MAIN, object) => {
-  return new Promise(resolve => {
+  return new Promise(async function(resolve, reject) {
     let typing = {
       type: '',
       type_noemoji: '',

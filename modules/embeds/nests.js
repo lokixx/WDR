@@ -1,6 +1,6 @@
-const Discord = require('discord.js');
 
-module.exports.run = async (MAIN, message, nest, server, embed_area, timezone, embed) => {
+
+module.exports.run = async (MAIN, message, nest, server, area, timezone, embed) => {
   let Embed_Config = require('../../embeds/'+embed);
 
   let form = MAIN.masterfile.pokemon[nest.pokemon_id].default_form ? MAIN.masterfile.pokemon[nest.pokemon_id].default_form : 0;
@@ -14,7 +14,7 @@ module.exports.run = async (MAIN, message, nest, server, embed_area, timezone, e
   let pokemon = {
     name: locale.pokemon_name, form: locale.form,
     // GET SPRITE IMAGE
-    sprite: await MAIN.Get_Sprite(MAIN, {pokemon_id: nest.pokemon_id, form: form}),
+    sprite: MAIN.Get_Sprite(MAIN, {pokemon_id: nest.pokemon_id, form: form}),
 
     // DETERMIND POKEMON TYPES AND WEAKNESSES
     type: typing.type,
@@ -23,12 +23,12 @@ module.exports.run = async (MAIN, message, nest, server, embed_area, timezone, e
     // NEST INFO
     nest_name: nest.name,
     submitter: nest.nest_submitted_by ? nest.nest_submitted_by : 'Map Scanned',
-    time: await MAIN.Bot_Time(nest.updated, 'nest', timezone),
+    time: MAIN.Bot_Time(nest.updated, 'nest', timezone),
     avg: nest.pokemon_avg,
 
     // LOCATION INFO
     lat: nest.lat, lon: nest.lon,
-    area: embed_area,
+    area: area.embed,
     map_url: MAIN.config.FRONTEND_URL,
 
     // MAP LINK PROVIDERS

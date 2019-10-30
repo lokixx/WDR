@@ -1,8 +1,8 @@
-const Discord = require('discord.js');
+
 module.exports = function(g) {
 
   // CREATE THE RAID EMBED
-  let raid_embed = new Discord.RichEmbed()
+  let raid_embed = new MAIN.Discord.RichEmbed()
   .setColor(g.color)
   .setThumbnail(g.sprite)
   .setAuthor(g.name, g.url)

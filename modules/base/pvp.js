@@ -1,4 +1,4 @@
-const Discord = require('discord.js');
+
 
 module.exports =  {
   CalculatePossibleCPs: function (MAIN, pokemonID, formID, attack, defense, stamina, level, gender, minCP, maxCP) {

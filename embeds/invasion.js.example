@@ -1,7 +1,7 @@
-const Discord = require('discord.js');
+
 module.exports = function(p) {
 
-  let invasion_embed = new Discord.RichEmbed()
+  let invasion_embed = new MAIN.Discord.RichEmbed()
   .setColor(p.color)
   .setThumbnail(p.sprite)
   .setAuthor(p.name, p.url)

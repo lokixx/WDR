@@ -3,9 +3,9 @@ delete require.cache[require.resolve('../embeds/pvp.js')];
 const Send_Pokemon = require('../embeds/pokemon.js');
 const Send_PvP = require('../embeds/pvp.js');
 const pvp = require('../base/pvp.js');
-const Discord = require('discord.js');
 
-module.exports.run = async (MAIN, sighting, main_area, sub_area, embed_area, server, timezone) => {
+
+module.exports.run = async (MAIN, sighting, area, server, timezone) => {
 
   let internal_value = (sighting.individual_defense+sighting.individual_stamina+sighting.individual_attack)/45;
   let time_now = new Date().getTime(); internal_value = Math.floor(internal_value*1000)/10;
@@ -29,13 +29,13 @@ module.exports.run = async (MAIN, sighting, main_area, sub_area, embed_area, ser
 
         // DEFINE VARIABLES
         let user_areas = user.geofence.split(',');
-        let embed = {};
+        let embed = '';
 
         // CHECK IF THE USERS SUBS ARE PAUSED, EXIST, AND THAT THE AREA MATCHES THEIR DISCORD
         if(user.pokemon && user.pokemon_status == 'ACTIVE' && MAIN.config.POKEMON.Subscriptions == 'ENABLED'){
           // SET DEFAULT EMBED STYLE
-          if(sighting.cp > 0) { embed.embed = 'pokemon_iv.js'; }
-          else{ embed.embed = 'pokemon.js'; }
+          if(sighting.cp > 0) { embed = 'pokemon_iv.js'; }
+          else{ embed = 'pokemon.js'; }
 
           // CONVERT POKEMON LIST TO AN ARRAY
           let pokemon = JSON.parse(user.pokemon);
@@ -54,13 +54,13 @@ module.exports.run = async (MAIN, sighting, main_area, sub_area, embed_area, ser
               case sub.areas == 'No':
                 area_pass = true; break;
               case sub.areas !== 'Yes':
-                if(sub.areas.split(',').indexOf(main_area) >= 0){ area_pass = true; }
-                if(sub.areas.split(',').indexOf(sub_area) >= 0){ area_pass = true; } break;
+                if(sub.areas.split(',').indexOf(area.main) >= 0){ area_pass = true; }
+                if(sub.areas.split(',').indexOf(area.sub) >= 0){ area_pass = true; } break;
               case user.geofence == server.name:
                 area_pass = true; break;
-              case user_areas.indexOf(main_area) >= 0:
+              case user_areas.indexOf(area.main) >= 0:
                 area_pass = true; break;
-              case user_areas.indexOf(sub_area) >= 0:
+              case user_areas.indexOf(area.sub) >= 0:
                 area_pass = true; break;
             }
 
@@ -113,7 +113,7 @@ module.exports.run = async (MAIN, sighting, main_area, sub_area, embed_area, ser
                             case sub.size.toLowerCase() != size: break;
                             default:
                               if(sub.gender == 'all' || sub.gender == gender){
-                                Send_Pokemon.run(MAIN, true, user, sighting, internal_value, time_now, main_area, sub_area, embed_area, server, timezone, '', embed);
+                                Send_Pokemon.run(MAIN, true, user, sighting, internal_value, time_now, area, server, timezone, '', embed);
                               }
                           } break;
                         default:
@@ -127,7 +127,7 @@ module.exports.run = async (MAIN, sighting, main_area, sub_area, embed_area, ser
                             case sub.size.toLowerCase() != size: break;
                             default:
                               if(sub.gender == 'all' || sub.gender == gender){
-                                Send_Pokemon.run(MAIN, true, user, sighting, internal_value, time_now, main_area, sub_area, embed_area, server, timezone, '', embed);
+                                Send_Pokemon.run(MAIN, true, user, sighting, internal_value, time_now, area, server, timezone, '', embed);
                               }
                           }
                       }
@@ -142,87 +142,87 @@ module.exports.run = async (MAIN, sighting, main_area, sub_area, embed_area, ser
         }
 
         // PVP SUBSCRIPTION CHECK IF THE USERS SUBS ARE PAUSED, EXIST, AND THAT THE AREA MATCHES THEIR DISCORD
-        if(user.pvp && user.pvp_status == 'ACTIVE' && MAIN.config.PVP.Subscriptions == 'ENABLED'){
-          // SET DEFAULT EMBED STYLE
-          embed.embed = 'pvp.js';
-
-          // CONVERT PVP LIST TO AN ARRAY
-          let pokemon_pvp = JSON.parse(user.pvp);
-
-          // CHECK EACH USER PVP SUBSCRIPTION
-          pokemon_pvp.subscriptions.forEach((sub,index) => {
-            // AREA CHECK
-            let area_pass = false;
-            switch(true){
-              case !sub.areas:
-              case sub.areas == 'No':
-                area_pass = true; break;
-              case sub.areas !== 'Yes':
-                if(sub.areas.split(',').indexOf(main_area) >= 0){ area_pass = true; }
-                if(sub.areas.split(',').indexOf(sub_area) >= 0){ area_pass = true; } break;
-              case user.geofence == server.name:
-                area_pass = true; break;
-              case user_areas.indexOf(main_area) >= 0:
-                area_pass = true; break;
-              case user_areas.indexOf(sub_area) >= 0:
-                area_pass = true; break;
-            }
-
-            // CHECK IF THE AREA IS WITHIN THE USER'S GEOFENCES
-            if(area_pass == true){
-
-              // CHECK FOR EVOLUTIONS FOR NAME FILTER
-              let evolution_pass = false, sub_id = 0;
-              for (key in MAIN.masterfile.pokemon) {
-                 if (MAIN.masterfile.pokemon[key].name === sub.name.split(' ')[0]) {
-                   sub_id = key;
-              }}
-              MAIN.masterfile.pokemon[sighting.pokemon_id].evolutions.forEach((evolve_id) => {
-                if(evolve_id == sub_id){ evolution_pass = true; }
-                MAIN.masterfile.pokemon[evolve_id].evolutions.forEach((evolved_id) => {
-                  if(evolved_id == sub_id){ evolution_pass = true; }
-              }); });
-
-              // CHECK POKEMON NAME
-              if(sub.name.startsWith(sighting.locale.pokemon_name) || sub.name.toLowerCase().startsWith('all') || evolution_pass == true){
-
-
-                if(sub.min_rank.toString().toLowerCase() == 'all'){
-                  sub.min_rank = 4096;
-                }
-                if(sub.min_percent.toString().toLowerCase() == 'all'){
-                  sub.min_percent = 0;
-                }
-
-                // PVP Filtering
-                // no need to calculate possible CP if current CP wasn't provided
-                if(!sighting.cp) return;
-                if(sighting.cp > sub.max_cp) { return sightingFailed(MAIN, user, sighting, "Max CP Range",true); }
-                let possible_cps = pvp.CalculatePossibleCPs(MAIN, sighting.pokemon_id, sighting.form, sighting.individual_attack, sighting.individual_defense, sighting.individual_stamina, sighting.pokemon_level, gender, sub.min_cp, sub.max_cp);
-                let unique_cps = {};
-
-                for(var i = possible_cps.length - 1; i >= 0; i--){
-                  if(!unique_cps[possible_cps[i].pokemonID]){
-                    unique_cps[possible_cps[i].pokemonID] = {};
-                    let pvpRanks = pvp.CalculateTopRanks(MAIN, possible_cps[i].pokemonID, possible_cps[i].formID, sub.max_cp);
-                    let rank = pvpRanks[sighting.individual_attack][sighting.individual_defense][sighting.individual_stamina];
-                    unique_cps[possible_cps[i].pokemonID].rank = rank.rank;
-                    unique_cps[possible_cps[i].pokemonID].percent = rank.percent;
-                    unique_cps[possible_cps[i].pokemonID].level = rank.level;
-                    unique_cps[possible_cps[i].pokemonID].cp = possible_cps[i].cp;
-                  }
-                }
-
-                unique_cps = pvp.FilterPossibleCPsByRank(unique_cps, sub.min_rank);
-                unique_cps = pvp.FilterPossibleCPsByPercent(unique_cps, sub.min_percent);
-
-                if(Object.keys(unique_cps).length == 0 ) { return sightingFailed(MAIN, user, sighting, "CP Range",true); }
-
-                Send_PvP.run(MAIN, user, sighting, internal_value, time_now, main_area, sub_area, embed_area, server, timezone, '', embed, unique_cps);
-              } else{ return sightingFailed(MAIN, user, sighting, 'Name Filters',true); }
-            } else{ return sightingFailed(MAIN, user, sighting, 'Area Filter',true); }
-          });
-        }
+        // if(user.pvp && user.pvp_status == 'ACTIVE' && MAIN.config.PVP.Subscriptions == 'ENABLED'){
+        //   // SET DEFAULT EMBED STYLE
+        //   embed = 'pvp.js';
+        //
+        //   // CONVERT PVP LIST TO AN ARRAY
+        //   let pokemon_pvp = JSON.parse(user.pvp);
+        //
+        //   // CHECK EACH USER PVP SUBSCRIPTION
+        //   pokemon_pvp.subscriptions.forEach((sub,index) => {
+        //     // AREA CHECK
+        //     let area_pass = false;
+        //     switch(true){
+        //       case !sub.areas:
+        //       case sub.areas == 'No':
+        //         area_pass = true; break;
+        //       case sub.areas !== 'Yes':
+        //         if(sub.areas.split(',').indexOf(area.main) >= 0){ area_pass = true; }
+        //         if(sub.areas.split(',').indexOf(area.sub) >= 0){ area_pass = true; } break;
+        //       case user.geofence == server.name:
+        //         area_pass = true; break;
+        //       case user_areas.indexOf(area.main) >= 0:
+        //         area_pass = true; break;
+        //       case user_areas.indexOf(area.sub) >= 0:
+        //         area_pass = true; break;
+        //     }
+        //
+        //     // CHECK IF THE AREA IS WITHIN THE USER'S GEOFENCES
+        //     if(area_pass == true){
+        //
+        //       // CHECK FOR EVOLUTIONS FOR NAME FILTER
+        //       let evolution_pass = false, sub_id = 0;
+        //       for (key in MAIN.masterfile.pokemon) {
+        //          if (MAIN.masterfile.pokemon[key].name === sub.name.split(' ')[0]) {
+        //            sub_id = key;
+        //       }}
+        //       MAIN.masterfile.pokemon[sighting.pokemon_id].evolutions.forEach((evolve_id) => {
+        //         if(evolve_id == sub_id){ evolution_pass = true; }
+        //         MAIN.masterfile.pokemon[evolve_id].evolutions.forEach((evolved_id) => {
+        //           if(evolved_id == sub_id){ evolution_pass = true; }
+        //       }); });
+        //
+        //       // CHECK POKEMON NAME
+        //       if(sub.name.startsWith(sighting.locale.pokemon_name) || sub.name.toLowerCase().startsWith('all') || evolution_pass == true){
+        //
+        //
+        //         if(sub.min_rank.toString().toLowerCase() == 'all'){
+        //           sub.min_rank = 4096;
+        //         }
+        //         if(sub.min_percent.toString().toLowerCase() == 'all'){
+        //           sub.min_percent = 0;
+        //         }
+        //
+        //         // PVP Filtering
+        //         // no need to calculate possible CP if current CP wasn't provided
+        //         if(!sighting.cp) return;
+        //         if(sighting.cp > sub.max_cp) { return sightingFailed(MAIN, user, sighting, "Max CP Range",true); }
+        //         let possible_cps = pvp.CalculatePossibleCPs(MAIN, sighting.pokemon_id, sighting.form, sighting.individual_attack, sighting.individual_defense, sighting.individual_stamina, sighting.pokemon_level, gender, sub.min_cp, sub.max_cp);
+        //         let unique_cps = {};
+        //
+        //         for(var i = possible_cps.length - 1; i >= 0; i--){
+        //           if(!unique_cps[possible_cps[i].pokemonID]){
+        //             unique_cps[possible_cps[i].pokemonID] = {};
+        //             let pvpRanks = pvp.CalculateTopRanks(MAIN, possible_cps[i].pokemonID, possible_cps[i].formID, sub.max_cp);
+        //             let rank = pvpRanks[sighting.individual_attack][sighting.individual_defense][sighting.individual_stamina];
+        //             unique_cps[possible_cps[i].pokemonID].rank = rank.rank;
+        //             unique_cps[possible_cps[i].pokemonID].percent = rank.percent;
+        //             unique_cps[possible_cps[i].pokemonID].level = rank.level;
+        //             unique_cps[possible_cps[i].pokemonID].cp = possible_cps[i].cp;
+        //           }
+        //         }
+        //
+        //         unique_cps = pvp.FilterPossibleCPsByRank(unique_cps, sub.min_rank);
+        //         unique_cps = pvp.FilterPossibleCPsByPercent(unique_cps, sub.min_percent);
+        //
+        //         if(Object.keys(unique_cps).length == 0 ) { return sightingFailed(MAIN, user, sighting, "CP Range",true); }
+        //
+        //         Send_PvP.run(MAIN, user, sighting, internal_value, time_now, area, server, timezone, '', embed, unique_cps);
+        //       } else{ return sightingFailed(MAIN, user, sighting, 'Name Filters',true); }
+        //     } else{ return sightingFailed(MAIN, user, sighting, 'Area Filter',true); }
+        //   });
+        // }
       });
     } return;
   });

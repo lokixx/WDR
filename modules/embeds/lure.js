@@ -1,6 +1,6 @@
-const Discord = require('discord.js');
 
-module.exports.run = async (MAIN, target, lure, type, main_area, sub_area, embed_area, server, timezone, role_id, embed) => {
+
+module.exports.run = async (MAIN, target, lure, type, area, server, timezone, role_id, embed) => {
   let Embed_Config = require('../../embeds/'+embed);
   let locale = await MAIN.Get_Locale(MAIN, lure, server);
 
@@ -16,13 +16,13 @@ module.exports.run = async (MAIN, target, lure, type, main_area, sub_area, embed
     url: lure.url ? lure.url : 'https://raw.githubusercontent.com/shindekokoro/PogoAssets/master/static_assets/png/Badge_Pokestop_SILVER_01.png',
 
     // LURE EXPIRATION TIME
-    time: await MAIN.Bot_Time(lure.lure_expiration, '1', timezone),
+    time: MAIN.Bot_Time(lure.lure_expiration, '1', timezone),
     mins: Math.floor((lure.lure_expiration-(time_now/1000))/60),
     secs: Math.floor((lure.lure_expiration-(time_now/1000)) - ((Math.floor((lure.lure_expiration-(time_now/1000))/60))*60)),
 
     // GET LOCATION INFO
     lat: lure.latitude, lon: lure.longitude,
-    area: embed_area,
+    area: area.embed,
     map_url: MAIN.config.FRONTEND_URL,
 
     // MAP LINK PROVIDERS

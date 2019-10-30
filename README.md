@@ -28,7 +28,7 @@
       - You need to add each Discord you plan on serving. WebhookDataReceiver is multi-discord capable. The geofence should encompass the whole area that the discord covers. Must be in geojson format.
   - Geojson.json
       - Geofences of areas to label your pokemon/raid/quest posts with and for users to subscribe to alerts with.
-      - Go to http://geojson.io/ and draw your geofences. You MUST add a "name" field to each geofence. If you want to use sub areas (smaller detailed geofences within larger geofences), you must add a sub_area field and then true or false as the value. All geofences must be in geojson format.
+      - Go to http://geojson.io/ and draw your geofences. You MUST add a "name" field to each geofence. If you want to use sub areas (smaller detailed geofences within larger geofences), you must add a area.sub field and then true or false as the value. All geofences must be in geojson format.
   - config.ini
       - All directions for this files are contianed within this file.
       - Make sure to create bot tokens (2 min) at https://discordapp.com/developers/applications/

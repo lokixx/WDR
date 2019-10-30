@@ -1,8 +1,7 @@
-const Discord = require('discord.js');
 
-module.exports.run = async (MAIN, target, invasion, type, main_area, sub_area, embed_area, server, timezone, role_id, embed) => {
+
+module.exports.run = async (MAIN, target, invasion, type, area, server, timezone, role_id, embed) => {
   let Embed_Config = require('../../embeds/'+embed);
-  let invasion_embed = {};
 
   // CHECK IF THE TARGET IS A USER
   let member = MAIN.guilds.get(server.id).members.get(target.user_id);
@@ -22,12 +21,12 @@ module.exports.run = async (MAIN, target, invasion, type, main_area, sub_area, e
     grunt_gender: MAIN.grunts[invasion.grunt_type].grunt,
 
     //INCIDENT EXPIRATION TIMES
-    time: await MAIN.Bot_Time(invasion.incident_expire_timestamp, '1', timezone),
+    time: MAIN.Bot_Time(invasion.incident_expire_timestamp, '1', timezone),
     mins: Math.floor((invasion.incident_expire_timestamp-(time_now/1000))/60),
     secs: Math.floor((invasion.incident_expire_timestamp-(time_now/1000)) - ((Math.floor((invasion.incident_expire_timestamp-(time_now/1000))/60))*60)),
 
     lat: invasion.latitude, lon: invasion.longitude,
-    area: embed_area,
+    area: area.embed,
     map_url: MAIN.config.FRONTEND_URL,
 
     // MAP LINK PROVIDERS
@@ -113,11 +112,11 @@ module.exports.run = async (MAIN, target, invasion, type, main_area, sub_area, e
     pokestop.encounters = '';
     pokestop.encounters += '**100% Chance to Encounter**:\n '+pokestop.first+'\n';
     if(pokestop.first.length <= 25){
-      pokestop.sprite = await MAIN.Get_Sprite(MAIN, { pokemon_id: parseInt(MAIN.grunts[invasion.grunt_type].encounters.first[0].split('_')[0]), form: parseInt(MAIN.grunts[invasion.grunt_type].encounters.first[0].split('_')[1]) });
+      pokestop.sprite = MAIN.Get_Sprite(MAIN, { pokemon_id: parseInt(MAIN.grunts[invasion.grunt_type].encounters.first[0].split('_')[0]), form: parseInt(MAIN.grunts[invasion.grunt_type].encounters.first[0].split('_')[1]) });
     }
   } //if(!MAIN.grunts[invasion.grunt_type].encounters){ console.info('[Embeds] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] No encounter info for: '+invasion.grunt_type);}
 
-  invasion_embed = await Embed_Config(pokestop);
+  let invasion_embed = await Embed_Config(pokestop);
   if(member){
     if(MAIN.debug.Invasion == 'ENABLED' && MAIN.debug.Subscriptions == 'ENABLED'){ console.info('[EMBEDS] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] Sent a '+pokestop.name+' to '+member.user.tag+' ('+member.id+').'); }
     return MAIN.Send_DM(MAIN, server.id, member.id, invasion_embed, target.bot);
