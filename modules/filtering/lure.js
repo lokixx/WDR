@@ -30,9 +30,9 @@ module.exports.run = async (MAIN, lure, area, server, timezone, role_id) => {
     if (lure_channel[1].embed) { embed = lure_channel[1].embed; }
 
     // THROW ERRORS AND BREAK FOR INVALID DATA
-    if(!filter){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [lure.js] The filter defined for'+lure_channel[0]+' does not appear to exist.'); }
+    if(!filter){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [lure.js] The filter defined for '+lure_channel[0]+' does not appear to exist.'); }
     if(!channel){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [lure.js] The channel '+lure_channel[0]+' does not appear to exist.'); }
-    if(filter.Type != 'lure'){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [lure.js] The filter defined for'+lure_channel[0]+' does not appear to be a lure filter.'); }
+    if(filter.Type != 'lure'){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [lure.js] The filter defined for '+lure_channel[0]+' does not appear to be a lure filter.'); }
 
     // FILTER FOR LURE TYPE
     else if (filter.Lure_Type.indexOf(type) >= 0) {

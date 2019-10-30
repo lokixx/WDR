@@ -32,9 +32,9 @@ module.exports.run = async (MAIN, sighting, area, server, timezone, role_id) => 
     }
 
     // CHECK FOR INVALID DATA
-    if(!filter){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for'+pokemon_channel[0]+' does not appear to exist.'); }
+    if(!filter){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for '+pokemon_channel[0]+' does not appear to exist.'); }
     if(!channel){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The channel '+pokemon_channel[0]+' does not appear to exist.'); }
-    if(filter.Type != 'pokemon'){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for'+pokemon_channel[0]+' does not appear to be a pokemon filter.'); }
+    if(filter.Type != 'pokemon'){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for '+pokemon_channel[0]+' does not appear to be a pokemon filter.'); }
 
     // ADD ROLE ID IF IT EXISTS
     if(pokemon_channel[1].roleid){

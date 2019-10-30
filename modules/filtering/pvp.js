@@ -27,7 +27,7 @@ module.exports.run = async (MAIN, sighting, area, server, timezone, role_id) => 
     }
 
     // CHECK FOR INVALID DATA
-    if(!filter){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for'+pvp_channel[0]+' does not appear to exist.'); }
+    if(!filter){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for '+pvp_channel[0]+' does not appear to exist.'); }
     if(!channel){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The channel '+pvp_channel[0]+' does not appear to exist.'); }
     if(filter.Type != 'pvp'){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for'+pvp_channel[0]+' does not appear to be a pvp filter.'); }
 

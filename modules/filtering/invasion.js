@@ -35,9 +35,9 @@ module.exports.run = async (MAIN, invasion, area, server, timezone, role_id) => 
     if (invasion_channel[1].embed) { embed = invasion_channel[1].embed; }
 
     // THROW ERRORS AND BREAK FOR INVALID DATA
-    if(!filter){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] The filter defined for'+invasion_channel[0]+' does not appear to exist.'); }
+    if(!filter){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] The filter defined for '+invasion_channel[0]+' does not appear to exist.'); }
     if(!channel){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] The channel '+invasion_channel[0]+' does not appear to exist.'); }
-    if(filter.Type != 'invasion'){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] The filter defined for'+quest_channel[0]+' does not appear to be a invasion filter.'); }
+    if(filter.Type != 'invasion'){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [invasion.js] The filter defined for '+quest_channel[0]+' does not appear to be a invasion filter.'); }
 
     // FILTER FOR INVASION TYPE AND GENDER
     else if (filter[type] == 'All' || filter[type] == gender) {

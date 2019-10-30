@@ -41,9 +41,9 @@ module.exports.run = async (MAIN, raid, area, server, timezone, role_id) => {
     }
 
     // THROW ERRORS AND BREAK FOR INVALID DATA
-    if(!filter){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [raids.js] The filter defined for'+raid_channel[0]+' does not appear to exist.'); }
+    if(!filter){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [raids.js] The filter defined for '+raid_channel[0]+' does not appear to exist.'); }
     if(!channel){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [raids.js] The channel '+raid_channel[0]+' does not appear to exist.'); }
-    if(filter.Type != 'raid'){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [raids.js] The filter defined for'+raid_channel[0]+' does not appear to be a raid filter.'); }
+    if(filter.Type != 'raid'){ return console.error('[FILTERING] ['+MAIN.Bot_Time(null,'stamp')+'] [raids.js] The filter defined for '+raid_channel[0]+' does not appear to be a raid filter.'); }
 
     // FILTER FOR EGG LEVEL
     else if( (type == 'Egg' && filter.Egg_Levels.indexOf(raid.level) >= 0) || (type == 'Boss' && (filter.Boss_Levels.indexOf(raid.level) >= 0 || filter.Boss_Levels.indexOf(boss_name) >= 0)) ){

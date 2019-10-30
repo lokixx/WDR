@@ -25,9 +25,9 @@ module.exports.run = async (MAIN, quest, area, server, timezone, role_id) => {
     let role_id = '';
 
     // THROW ERRORS FOR INVALID DATA
-    if(!filter){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for'+quest_channel[0]+' does not appear to exist.'); }
+    if(!filter){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for '+quest_channel[0]+' does not appear to exist.'); }
     if(!channel){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The channel '+quest_channel[0]+' does not appear to exist.'); }
-    if(filter.Type != 'quest'){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for'+quest_channel[0]+' does not appear to be a quest filter.'); }
+    if(filter.Type != 'quest'){ return console.error('['+MAIN.config.BOT_NAME+'] ['+MAIN.Bot_Time(null,'stamp')+'] The filter defined for '+quest_channel[0]+' does not appear to be a quest filter.'); }
 
     if (quest_channel[1].roleid) {
       if (quest_channel[1].roleid == 'here' || quest_channel[1].roleid == 'everyone'){
